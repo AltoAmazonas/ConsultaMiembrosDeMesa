@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta Miembros de Mesa 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+  <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-6 border border-slate-200">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-slate-800">Consulta de Miembros de Mesa</h1>
+      <p class="text-sm text-slate-500 mt-1">Elecciones Regionales y Municipales 2026</p>
+    </div>
+
+    <!-- Buscador -->
+    <div class="flex gap-2 mb-6">
+      <input 
+        type="text" 
+        id="dniInput" 
+        maxlength="8" 
+        placeholder="Ingrese número de DNI" 
+        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-lg tracking-widest"
+      >
+      <button 
+        onclick="consultarDNI()" 
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition-colors"
+      >
+        Buscar
+      </button>
+    </div>
+
+    <!-- Contenedor de Resultado -->
+    <div id="resultado" class="hidden border-t pt-4 space-y-3">
+      <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+        <span class="text-xs text-blue-600 font-semibold uppercase">Nombre Completo</span>
+        <p id="resNombre" class="text-base font-bold text-slate-800 uppercase"></p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div class="bg-slate-50 p-3 rounded-lg border">
+          <span class="text-xs text-slate-500 font-semibold uppercase">N° de Mesa</span>
+          <p id="resMesa" class="text-lg font-extrabold text-blue-600"></p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border">
+          <span class="text-xs text-slate-500 font-semibold uppercase">Cargo</span>
+          <p id="resCargo" class="text-lg font-extrabold text-emerald-600"></p>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-lg border space-y-1 text-sm">
+        <p><span class="font-semibold text-slate-600">DNI:</span> <span id="resDni"></span></p>
+        <p><span class="font-semibold text-slate-600">Distrito:</span> <span id="resDistrito"></span></p>
+        <p><span class="font-semibold text-slate-600">Provincia:</span> <span id="resProvincia"></span></p>
+        <p><span class="font-semibold text-slate-600">Departamento:</span> <span id="resDepartamento"></span></p>
+      </div>
+    </div>
+
+    <!-- Mensaje de Estado o Error -->
+    <div id="mensaje" class="hidden text-center text-sm font-medium p-3 rounded-lg"></div>
+  </div>
+
+  <script>
+    let bdMiembros = {};
+
+    // Cargar los datos del archivo JSON
+    fetch('datos.json')
+      .then(response => response.json())
+      .then(data => {
+        bdMiembros = data;
+      })
+      .catch(error => {
+        console.error('Error al cargar datos.json:', error);
+      });
+
+    function consultarDNI() {
+      const dni = document.getElementById('dniInput').value.trim();
+      const resContainer = document.getElementById('resultado');
+      const msgContainer = document.getElementById('mensaje');
+
+      resContainer.classList.add('hidden');
+      msgContainer.classList.add('hidden');
+
+      if (dni.length !== 8 || isNaN(dni)) {
+        msgContainer.textContent = "Por favor, ingrese un DNI válido de 8 dígitos.";
+        msgContainer.className = "text-center text-sm font-medium p-3 rounded-lg bg-amber-100 text-amber-800";
+        msgContainer.classList.remove('hidden');
+        return;
+      }
+
+      if (bdMiembros[dni]) {
+        const persona = bdMiembros[dni];
+        document.getElementById('resDni').textContent = persona.dni;
+        document.getElementById('resNombre').textContent = persona.nombre;
+        document.getElementById('resMesa').textContent = persona.mesa;
+        document.getElementById('resCargo').textContent = persona.cargo;
+        document.getElementById('resDistrito').textContent = persona.distrito;
+        document.getElementById('resProvincia').textContent = persona.provincia;
+        document.getElementById('resDepartamento').textContent = persona.departamento;
+
+        resContainer.classList.remove('hidden');
+      } else {
+        msgContainer.textContent = "El DNI ingresado no figura en la lista de miembros de mesa.";
+        msgContainer.className = "text-center text-sm font-medium p-3 rounded-lg bg-red-100 text-red-800";
+        msgContainer.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('dniInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        consultarDNI();
+      }
+    });
+  </script>
+</body>
+</html>
