@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Consulta de Miembros de Mesa - Elecciones 2026</title>
-  <!-- Tailwind CSS para diseño limpio y profesional -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
@@ -26,8 +26,9 @@
       <input 
         type="text" 
         id="dniInput" 
-        maxlength="8" 
+        maxlength="9" 
         placeholder="Ingresa tu DNI" 
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
         class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-lg tracking-widest font-bold text-slate-700 bg-slate-50"
       >
       <button 
@@ -39,12 +40,17 @@
     </div>
 
     <!-- Tarjeta de Resultados -->
-    <div id="resultado" class="hidden space-y-3 pt-2 border-t border-slate-100">
+    <div id="resultado" class="hidden space-y-4 pt-2 border-t border-slate-100">
       
+      <!-- Aviso Llamativo Superior -->
+      <div class="bg-emerald-500 text-white text-center py-2.5 px-4 rounded-xl shadow-sm animate-pulse">
+        <p class="text-base font-black uppercase tracking-wide">¡SÍ ERES MIEMBRO DE MESA!</p>
+      </div>
+
       <!-- Nombre Completo -->
-      <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+      <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-center">
         <span class="text-xs text-blue-600 font-bold uppercase tracking-wider">Nombre y Apellido Completo</span>
-        <p id="resNombre" class="text-base font-extrabold text-slate-800 uppercase mt-0.5"></p>
+        <p id="resNombre" class="text-base font-extrabold text-slate-800 uppercase mt-1"></p>
       </div>
 
       <!-- Mesa y Cargo -->
@@ -59,23 +65,20 @@
         </div>
       </div>
 
-      <!-- Ubicación y DNI -->
-      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-sm text-slate-700">
-        <p class="flex justify-between border-b pb-1"><span class="font-medium text-slate-400">DNI:</span> <span id="resDni" class="font-bold"></span></p>
-        <p class="flex justify-between border-b pb-1"><span class="font-medium text-slate-400">Distrito:</span> <span id="resDistrito" class="font-bold"></span></p>
-        <p class="flex justify-between border-b pb-1"><span class="font-medium text-slate-400">Provincia:</span> <span id="resProvincia" class="font-bold"></span></p>
-        <p class="flex justify-between"><span class="font-medium text-slate-400">Departamento:</span> <span id="resDepartamento" class="font-bold"></span></p>
+      <!-- DNI únicamente -->
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-sm text-slate-700">
+        <p class="flex justify-between items-center"><span class="font-medium text-slate-400">DNI:</span> <span id="resDni" class="font-bold text-base"></span></p>
       </div>
 
       <!-- Firma del desarrollador -->
       <div class="pt-3 text-center border-t border-slate-100">
-        <p class="text-xs font-semibold text-slate-400 tracking-wide">Designed and Developed by The King</p>
+        <p class="text-xs text-slate-400 tracking-wide">Designed and Developed by <strong class="text-slate-700 font-bold">Reynaldus</strong></p>
       </div>
 
     </div>
 
     <!-- Alerta de Error / Mensajes -->
-    <div id="mensaje" class="hidden text-center text-sm font-semibold p-3.5 rounded-xl mt-4"></div>
+    <div id="mensaje" class="hidden text-center text-sm font-bold p-4 rounded-xl mt-4"></div>
 
   </div>
 
@@ -93,34 +96,34 @@
       });
 
     function consultarDNI() {
-      const dni = document.getElementById('dniInput').value.trim();
+      const dniInput = document.getElementById('dniInput').value.trim();
       const resContainer = document.getElementById('resultado');
-      msgContainer = document.getElementById('mensaje');
+      const msgContainer = document.getElementById('mensaje');
 
       resContainer.classList.add('hidden');
       msgContainer.classList.add('hidden');
 
-      if (dni.length !== 8 || isNaN(dni)) {
-        msgContainer.textContent = "⚠️ Ingresa un DNI válido de 8 dígitos.";
-        msgContainer.className = "text-center text-sm font-semibold p-3.5 rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+      // Validar números de 8 o 9 dígitos
+      if (!/^\d{8,9}$/.test(dniInput)) {
+        msgContainer.textContent = "⚠️ Por favor, ingresa un número de DNI válido de 8 o 9 dígitos.";
+        msgContainer.className = "text-center text-sm font-bold p-4 rounded-xl bg-amber-50 text-amber-800 border border-amber-200";
         msgContainer.classList.remove('hidden');
         return;
       }
 
-      if (bdMiembros[dni]) {
-        const persona = bdMiembros[dni];
+      // Buscar por DNI exacto o por los primeros 8 dígitos
+      let persona = bdMiembros[dniInput] || bdMiembros[dniInput.substring(0, 8)];
+
+      if (persona) {
         document.getElementById('resDni').textContent = persona.dni;
         document.getElementById('resNombre').textContent = persona.nombre;
         document.getElementById('resMesa').textContent = persona.mesa;
         document.getElementById('resCargo').textContent = persona.cargo;
-        document.getElementById('resDistrito').textContent = persona.distrito;
-        document.getElementById('resProvincia').textContent = persona.provincia;
-        document.getElementById('resDepartamento').textContent = persona.departamento;
 
         resContainer.classList.remove('hidden');
       } else {
-        msgContainer.textContent = "❌ El DNI ingresado no figura en la lista de miembros de mesa.";
-        msgContainer.className = "text-center text-sm font-semibold p-3.5 rounded-xl bg-red-50 text-red-700 border border-red-200";
+        msgContainer.textContent = "NO HAS SIDO SORTEADO MIEMBRO DE MESA";
+        msgContainer.className = "text-center text-base font-extrabold p-4 rounded-xl bg-red-50 text-red-600 border border-red-200 uppercase tracking-wide";
         msgContainer.classList.remove('hidden');
       }
     }
