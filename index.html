@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consulta de Miembros de Mesa - ERM-2026</title>
+  <title>Consulta de Miembros de Mesa - ONPE 2026</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,7 +11,7 @@
 
   <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
     
-    <!-- Encabezado Inicial con distintivo ONPE suave y moderno -->
+    <!-- Encabezado Inicial con distintivo ONPE suave -->
     <div class="text-center mb-6">
       <div class="inline-flex items-center justify-center gap-2 bg-slate-100 text-slate-700 font-black text-lg px-4 py-2 rounded-xl mb-3 border border-slate-300 shadow-sm">
         <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +42,7 @@
       </button>
     </div>
 
-    <!-- Tarjeta de Resultados -->
+    <!-- Tarjeta de Resultados (Positivo) -->
     <div id="resultado" class="hidden space-y-4 pt-2 border-t border-slate-100">
       
       <!-- Aviso Llamativo Superior -->
@@ -68,20 +68,20 @@
         </div>
       </div>
 
-      <!-- DNI únicamente -->
+      <!-- DNI -->
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-sm text-slate-700">
         <p class="flex justify-between items-center"><span class="font-medium text-slate-400">DNI:</span> <span id="resDni" class="font-bold text-base"></span></p>
       </div>
 
-      <!-- Firma del desarrollador -->
-      <div class="pt-3 text-center border-t border-slate-100">
-        <p class="text-xs text-slate-400 tracking-wide">Designed and Developed by <strong class="text-slate-700 font-bold">Reynaldus</strong></p>
-      </div>
-
     </div>
 
-    <!-- Alerta de Error / Mensajes -->
+    <!-- Alerta de Respuesta Negativa / Error -->
     <div id="mensaje" class="hidden text-center p-4 rounded-xl mt-4"></div>
+
+    <!-- Firma del Desarrollador (Siempre visible en pantalla inicial, positiva y negativa) -->
+    <div class="pt-5 mt-4 text-center border-t border-slate-100">
+      <p class="text-xs text-slate-400 tracking-wide">Designed and Developed by <strong class="text-slate-700 font-bold">Reynaldus</strong></p>
+    </div>
 
   </div>
 
