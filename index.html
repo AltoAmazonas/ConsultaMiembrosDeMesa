@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consulta de Miembros de Mesa - Elecciones 2026</title>
+  <title>Consulta de Miembros de Mesa - ONPE 2026</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -11,14 +11,14 @@
 
   <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-6 border border-slate-200">
     
-    <!-- Encabezado Inicial -->
+    <!-- Encabezado Inicial con ícono de ONPE -->
     <div class="text-center mb-6">
-      <div class="inline-block bg-blue-100 text-blue-700 p-3 rounded-full mb-3 text-2xl">
-        🗳️
+      <div class="inline-flex items-center justify-center bg-blue-900 text-white font-extrabold text-lg px-4 py-2 rounded-xl mb-3 shadow-md tracking-widest border-2 border-red-600">
+        <span class="text-red-500 mr-1 text-xl">ON</span><span class="text-white text-xl">PE</span>
       </div>
       <h1 class="text-2xl font-bold text-slate-800">Consulta de Miembros de Mesa</h1>
       <p class="text-sm font-semibold text-blue-600 mt-1">Elecciones Regionales y Municipales 2026</p>
-      <p class="text-xs text-slate-500 font-medium mt-0.5">Sólo Alto Amazonas y Datem del Marañón</p>
+      <p class="text-xs text-slate-600 font-bold mt-1">Sólo Alto Amazonas y Datem del Marañón - LORETO</p>
     </div>
 
     <!-- Buscador -->
@@ -78,14 +78,14 @@
     </div>
 
     <!-- Alerta de Error / Mensajes -->
-    <div id="mensaje" class="hidden text-center text-sm font-bold p-4 rounded-xl mt-4"></div>
+    <div id="mensaje" class="hidden text-center p-4 rounded-xl mt-4"></div>
 
   </div>
 
   <script>
     let bdMiembros = {};
 
-    // Cargar la base de datos JSON al abrir la página
+    // Cargar la base de datos JSON
     fetch('datos.json')
       .then(response => response.json())
       .then(data => {
@@ -103,7 +103,6 @@
       resContainer.classList.add('hidden');
       msgContainer.classList.add('hidden');
 
-      // Validar números de 8 o 9 dígitos
       if (!/^\d{8,9}$/.test(dniInput)) {
         msgContainer.textContent = "⚠️ Por favor, ingresa un número de DNI válido de 8 o 9 dígitos.";
         msgContainer.className = "text-center text-sm font-bold p-4 rounded-xl bg-amber-50 text-amber-800 border border-amber-200";
@@ -111,7 +110,6 @@
         return;
       }
 
-      // Buscar por DNI exacto o por los primeros 8 dígitos
       let persona = bdMiembros[dniInput] || bdMiembros[dniInput.substring(0, 8)];
 
       if (persona) {
@@ -122,8 +120,8 @@
 
         resContainer.classList.remove('hidden');
       } else {
-        msgContainer.textContent = "NO HAS SIDO SORTEADO MIEMBRO DE MESA";
-        msgContainer.className = "text-center text-base font-extrabold p-4 rounded-xl bg-red-50 text-red-600 border border-red-200 uppercase tracking-wide";
+        msgContainer.textContent = "NO HAS SIDO SORTEADO COMO MIEMBRO DE MESA. ¡¡ANDA VOTA NOMÁS!!";
+        msgContainer.className = "text-center text-base font-black p-4 rounded-xl bg-red-50 text-red-600 border border-red-200 uppercase tracking-wide";
         msgContainer.classList.remove('hidden');
       }
     }
